@@ -41,7 +41,7 @@ func (c *Counter) increment(request []byte) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	log.Println("Incrementing count", req.Count)
+	log.Println("Increment", req.Count)
 
 	rsp := model.CountRsp{
 		Count: req.Count + 1,

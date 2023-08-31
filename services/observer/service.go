@@ -36,13 +36,13 @@ func (o *Observer) run(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-time.Tick(time.Second):
-			log.Println("Count", count)
+			log.Println("Request", count)
 			ctx, cancel := context.WithTimeout(ctx, time.Second*15)
 			c, err := o.counter.Increment(ctx, count)
 			if err != nil {
 				log.Println("Increment", err)
 			}
-			log.Println("Resp", c)
+			log.Println("Response", c)
 			cancel()
 			count = c
 		}
