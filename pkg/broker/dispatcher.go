@@ -2,11 +2,12 @@ package broker
 
 import (
 	"context"
-	amqp "github.com/rabbitmq/amqp091-go"
-	"log"
 	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Dispatcher struct {
@@ -43,7 +44,7 @@ func (d *Dispatcher) Close() {
 }
 
 func (d *Dispatcher) Dispatch(ctx context.Context, eventName string, data []byte) ([]byte, error) {
-	corrId := randomString(32)
+	corrId := uuid.New().String()
 	ch := make(chan []byte)
 	d.mx.Lock()
 	d.listeners[corrId] = ch
@@ -92,24 +93,7 @@ func (d *Dispatcher) run(ctx context.Context) {
 
 			if ok {
 				ch <- m.Body
-				err := m.Ack(false)
-				if err != nil {
-					log.Println("Ack error", err)
-					break
-				}
 			}
 		}
 	}
-}
-
-func randomString(l int) string {
-	bytes := make([]byte, l)
-	for i := 0; i < l; i++ {
-		bytes[i] = byte(randInt(65, 90))
-	}
-	return string(bytes)
-}
-
-func randInt(min int, max int) int {
-	return min + rand.Intn(max-min)
 }

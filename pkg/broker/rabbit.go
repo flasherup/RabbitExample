@@ -33,13 +33,13 @@ func (r *Rabbit) connect(url, queueName string, exclusive, autoAck bool) error {
 		return err
 	}
 
-	if !exclusive {
+	/*if !exclusive {
 		err = ch.Qos(
 			1,     // prefetch count
 			0,     // prefetch size
 			false, // global
 		)
-	}
+	}*/
 
 	r.Chanel = ch
 
